@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: authservice
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authservice
+    username: postgres
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
