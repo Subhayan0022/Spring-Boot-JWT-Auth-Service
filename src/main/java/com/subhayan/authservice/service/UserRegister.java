@@ -4,15 +4,21 @@ import com.subhayan.authservice.dto.DtoAuthRegister.*;
 import com.subhayan.authservice.entity.UserEntity;
 import com.subhayan.authservice.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserRegister {
     private final UserRepository userRepository;
 
+    @Autowired
     public UserRegister(UserRepository userRepository) {
         this.userRepository = userRepository;
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     }
+
 
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userRegisterRequestDTO) {
         UserEntity userEntity = mapRequestDTOToEntity(userRegisterRequestDTO);
@@ -24,7 +30,9 @@ public class UserRegister {
     private UserEntity mapRequestDTOToEntity(@NotNull UserRegisterRequestDTO userRegisterRequestDTO) {
         UserEntity entity = new UserEntity();
         entity.setEmail(String.valueOf(userRegisterRequestDTO.email()));
-        entity.setPassword(userRegisterRequestDTO.password());
+        String password = userRegisterRequestDTO.password();
+        String encodedPassword = new BCryptPasswordEncoder().encode(password);
+        entity.setPassword(encodedPassword);
 
         return entity;
     }
