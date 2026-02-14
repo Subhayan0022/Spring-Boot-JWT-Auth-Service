@@ -11,3 +11,8 @@ spring:
     show-sql: true
   flyway:
     enabled: true
+
+jwt:
+  secret: A3EWryOhza/n9If4BVdJ7ug6UJFjoiegWAXA7KI4TTg=
+  expiration: 1800000
+
