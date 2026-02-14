@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserRegister {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserRegister(UserRepository userRepository) {
+    public UserRegister(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -35,7 +36,7 @@ public class UserRegister {
         }
         entity.setEmail(String.valueOf(userRegisterRequestDTO.email()));
         String password = userRegisterRequestDTO.password();
-        String encodedPassword = new BCryptPasswordEncoder().encode(password);
+        String encodedPassword = passwordEncoder.encode(password);
         entity.setPassword(encodedPassword);
 
         return entity;
