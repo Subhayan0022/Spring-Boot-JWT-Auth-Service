@@ -37,7 +37,7 @@ public class UserLogin {
             throw new InvalidCredentialsException("Invalid email or password"); // For security, be obscure.
         }
 
-        String jwtToken = jwtUtil.generateToken(user.getEmail());
+        String jwtToken = jwtUtil.generateToken(user.getId().toString());
         log.debug("Generated JWT token: {}", jwtToken);
         return new JwtResponse(jwtToken);
     }
