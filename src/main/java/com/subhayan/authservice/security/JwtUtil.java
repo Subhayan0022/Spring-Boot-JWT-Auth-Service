@@ -20,21 +20,21 @@ public class JwtUtil {
         this.expiration = expiration;
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String userId) {
         return Jwts.builder()
-                .subject(email).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + expiration)).signWith(secretKey).compact();
+                .subject(userId).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + expiration)).signWith(secretKey).compact();
     }
 
     public Claims parseToken(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
     }
 
-    public String getEmailFromToken(String token) {
+    public String getUserIDFromToken(String token) {
         return parseToken(token).getSubject();
     }
 
-    public boolean validateToken(String token,  String email) {
-        return getEmailFromToken(token).equals(email) && !checkExpiration(token);
+    public boolean validateToken(String token,  String userId) {
+        return getUserIDFromToken(token).equals(userId) && !checkExpiration(token);
 
     }
 
