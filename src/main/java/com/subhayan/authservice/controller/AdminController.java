@@ -1,10 +1,12 @@
 package com.subhayan.authservice.controller;
 
+import com.subhayan.authservice.dto.AdminUpdateRequest;
 import com.subhayan.authservice.dto.PagedUserResponse;
 import com.subhayan.authservice.dto.UserDetailsResponse;
 import com.subhayan.authservice.entity.Role;
 import com.subhayan.authservice.service.AdminService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,5 +32,10 @@ public class AdminController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<UserDetailsResponse> adminGetUserById(@PathVariable UUID userId) {
         return ResponseEntity.ok(adminService.getUserDetailsById(userId));
+    }
+
+    @PatchMapping("/user/{userId}")
+    public ResponseEntity<UserDetailsResponse> updateUser(@PathVariable UUID userId, @Valid @RequestBody AdminUpdateRequest adminUpdateRequest) {
+        return ResponseEntity.ok(adminService.updateUser(userId, adminUpdateRequest));
     }
 }
