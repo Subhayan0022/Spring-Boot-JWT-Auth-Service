@@ -51,7 +51,7 @@ public class AdminService {
     public PagedUserResponse queryUsers(Role role, int page, int pageSize) {
         PageRequest pageable = PageRequest.of(page, pageSize);
 
-        Page<UserEntity> result = (role != null) ? userRepository.findByRole(role, pageable) : userRepository.findAll(pageable);
+        Page<UserEntity> result = (role != null) ? userRepository.findByRoleAndIsActive(role, true, pageable) : userRepository.findByIsActive(true, pageable);
         List<UserDetailsResponse> users = result.getContent().stream().map(this::mapToUserDetailsResponse).toList();
         log.info("ADMIN : Querying users for page {}, and page size {}", page, pageSize);
         return new PagedUserResponse(users, page, pageSize, result.getTotalElements());
@@ -90,6 +90,16 @@ public class AdminService {
         UserEntity updatedUser = userRepository.save(user);
         log.info("ADMIN : User with id {} updated", updatedUser.getId());
         return mapToUserDetailsResponse(updatedUser);
+    }
 
+    public void deleteUser(UUID userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("DELETE : User with id {} not found", userId);
+                    return new RuntimeException("DELETE ERROR : User with id " + userId + " not found");
+                });
+        user.setActive(false);
+        userRepository.save(user);
+        log.info("ADMIN : User with id {} deleted", userId);
     }
 }
